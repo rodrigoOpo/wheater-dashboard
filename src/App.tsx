@@ -1,15 +1,17 @@
 import CurrentWeather from "./components/cards/CurrentWeather"
 import DailyForecast from "./components/cards/DailyForecast"
 import HourlyForecast from "./components/cards/HourlyForecast"
+import AdditionalInfo from "./components/cards/AdditionalInfo"
+
 import { useQuery } from "@tanstack/react-query"
-import { getWheater } from "./api"
+import { getWeather } from "./api"
 import SvgIcon from "./assets/SvgIcon"
 
 function App() {
 
   const {isPending} = useQuery({
         queryKey: ['weather'],
-        queryFn: () => getWheater({lat: 47, lon:122})
+        queryFn: () => getWeather({lat: 47, lon:122})
     })
 
     if (isPending) {
@@ -28,6 +30,7 @@ function App() {
       <CurrentWeather/>
       <HourlyForecast/>
       <DailyForecast/>
+      <AdditionalInfo />
     </div>
   )
 }

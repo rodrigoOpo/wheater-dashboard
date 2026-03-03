@@ -1,6 +1,6 @@
 import Card from "./Card"
 import { useSuspenseQuery } from "@tanstack/react-query"
-import { getWheater } from "../../api"
+import { getWeather } from "../../api"
 import WeatherIcon from "../WeatherIcon"
 
 
@@ -11,7 +11,7 @@ export default function HourlyForecast({}: Props) {
 
     const { data } = useSuspenseQuery({
         queryKey: ['weather'],
-        queryFn: () => getWheater({lat: 37, lon:120})
+        queryFn: () => getWeather({lat: 37, lon:120})
     })
 
   return (
