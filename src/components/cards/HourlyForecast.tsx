@@ -2,17 +2,31 @@ import Card from "./Card"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { getWeather } from "../../api"
 import WeatherIcon from "../WeatherIcon"
+import type { Coords } from "../../types"
+import SvgIcon from "../../assets/SvgIcon"
 
 
 type Props = {
+  coords: Coords
 }
 
-export default function HourlyForecast({}: Props) {
+export default function HourlyForecast({coords}: Props) {
 
-    const { data } = useSuspenseQuery({
-        queryKey: ['weather'],
-        queryFn: () => getWeather({lat: 37, lon:120})
+    const { data, isPending } = useSuspenseQuery({
+        queryKey: ['weather', coords],
+        queryFn: () => getWeather({lat: coords.lat, lon: coords.lon})
     })
+
+    if (isPending) {
+      return (
+        <div className="flex flex-col gap-2 items-center">
+          <h1 className="font-semibold text-6xl mt-40">
+            Espera un momento :D
+          </h1>
+          <SvgIcon/>
+        </div>
+    )
+    }
 
   return (
     <Card title="Hourly Forecast (48 hours)" childrenClassName="flex flex-row gap-6 overflow-x-auto hide-scrollbar">        

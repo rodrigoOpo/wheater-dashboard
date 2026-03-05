@@ -2,35 +2,34 @@ import CurrentWeather from "./components/cards/CurrentWeather"
 import DailyForecast from "./components/cards/DailyForecast"
 import HourlyForecast from "./components/cards/HourlyForecast"
 import AdditionalInfo from "./components/cards/AdditionalInfo"
+import Map from "./components/Map"
 
-import { useQuery } from "@tanstack/react-query"
-import { getWeather } from "./api"
+import { useState, Suspense } from "react"
+import type { Coords } from "./types"
 import SvgIcon from "./assets/SvgIcon"
 
 function App() {
 
-  const {isPending} = useQuery({
-        queryKey: ['weather'],
-        queryFn: () => getWeather({lat: 47, lon:122})
-    })
+    const [coords, setCoords] = useState<Coords>({lat: 40, lon: 55})
 
-    if (isPending) {
-      return (
-        <div className="flex flex-col gap-2 items-center">
-          <h1 className="font-semibold text-6xl mt-40">
-            Espera un momento :D
-          </h1>
-          <SvgIcon/>
-        </div>
-    )
+    const onMapClick = (lat:number, lon:number) => {
+      setCoords({lat, lon})
     }
 
   return (
     <div className="flex flex-col gap-8 bg-zinc-1000 overflow-y-auto hide-scrollbar">
-      <CurrentWeather/>
-      <HourlyForecast/>
-      <DailyForecast/>
-      <AdditionalInfo />
+      <Map coords={coords} onMapClick={onMapClick}/>
+      <Suspense 
+      fallback=
+      {<div className="flex flex-col gap-2 items-center">
+        <h1 className="font-bold">Cargando el clima ...</h1>
+        <SvgIcon/>
+      </div>}>
+        <CurrentWeather coords={coords}/>
+        <HourlyForecast coords={coords}/>
+        <DailyForecast coords={coords}/>
+        <AdditionalInfo coords={coords}/>
+      </Suspense>
     </div>
   )
 }

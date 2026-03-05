@@ -8,18 +8,33 @@ import sunset from '../../assets/StaticIcons/sunset.svg?react'
 import uv from '../../assets/StaticIcons/uv.svg?react'
 import wind from '../../assets/StaticIcons/wind.svg?react'
 import Arrow from '../../assets/StaticIcons/Arrow.svg?react'
+import SvgIcon from "../../assets/SvgIcon"
 
+import type { Coords } from "../../types"
 
 import Card from "./Card"
 
-type Props = {}
+type Props = {
+  coords: Coords
+}
 
-export default function AdditionalInfo({}: Props) {
+export default function AdditionalInfo({coords}: Props) {
 
-  const {data} = useSuspenseQuery({
-    queryKey: ['weather'],
-    queryFn: () => getWeather({lat:22, lon:123})
+  const {data, isPending} = useSuspenseQuery({
+    queryKey: ['weather', coords],
+    queryFn: () => getWeather({lat:coords.lat, lon:coords.lon})
   })
+
+  if (isPending) {
+      return (
+        <div className="flex flex-col gap-2 items-center">
+          <h1 className="font-semibold text-6xl mt-40">
+            Espera un momento :D
+          </h1>
+          <SvgIcon/>
+        </div>
+    )
+    }
 
   return (
     <Card title="Additional Weather Info" childrenClassName="flex flex-col cap-8">
